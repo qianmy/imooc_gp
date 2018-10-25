@@ -11,12 +11,8 @@ import {Platform, StyleSheet, Text, Image, View} from 'react-native';
 import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
 import Boy from './Boy';
+import ListViewTest from './ListViewTest';
 
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -69,7 +65,7 @@ export default class App extends Component<Props> {
                  onPress={() => this.setState({selectedTab: 'tab_my'})}>
                  <View style={styles.page2}></View>
                  </TabNavigator.Item>
-                 </TabNavigator>*/}
+                 </TabNavigator>
                 <Navigator
                     initialRoute={{
                         component: Boy
@@ -78,7 +74,8 @@ export default class App extends Component<Props> {
                         let Component = route.component;
                         return <Component navigator={navigator} {...route.params}/>
                     }}
-                ></Navigator>
+                />*/}
+                <ListViewTest/>
             </View>
         );
     }

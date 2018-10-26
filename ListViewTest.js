@@ -52,6 +52,21 @@ const data = {
         }, {
             'email': 's.dedddf@df.net',
             'fullName': '里斯里斯张三里斯张三'
+        }, {
+            'email': 's.dvfvfef@df.net',
+            'fullName': '张三张三里斯'
+        }, {
+            'email': 's.devff@df.net',
+            'fullName': '里斯张三张三'
+        }, {
+            'email': 's.defef@dss.net',
+            'fullName': '里斯里斯张三张三'
+        }, {
+            'email': 's.daaaf@df.net',
+            'fullName': '里斯里斯里斯张三张三'
+        }, {
+            'email': 's.dedddf@df.net',
+            'fullName': '里斯里斯张三里斯张三'
         }
     ]
 }
@@ -134,7 +149,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     row: {
-        height: 50
+        height: 50,
+        justifyContent:'center'
     },
     line: {
         height: 1,

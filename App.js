@@ -12,7 +12,7 @@ import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
 import Boy from './Boy';
 import ListViewTest from './ListViewTest';
-
+import FetchTest from './FetchTest'
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -75,7 +75,7 @@ export default class App extends Component<Props> {
                         return <Component navigator={navigator} {...route.params}/>
                     }}
                 />*/}
-                <ListViewTest/>
+                <FetchTest/>
             </View>
         );
     }

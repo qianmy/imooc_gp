@@ -13,7 +13,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, Image, View} from 'react-native';
 import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
-
+import PopularPage from './PopularPage';
 
 type Props = {};
 export default class HomePage extends Component<Props> {
@@ -37,7 +37,7 @@ export default class HomePage extends Component<Props> {
                                                          source={require('../../res/images/ic_polular.png')}/>}
                         badgeText="1"
                         onPress={() => this.setState({selectedTab: 'td_popular'})}>
-                        <View style={styles.page1}></View>
+                        <PopularPage/>
                     </TabNavigator.Item>
                     <TabNavigator.Item
                         selected={this.state.selectedTab === 'tb_trending'}

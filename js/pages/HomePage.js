@@ -33,7 +33,7 @@ export default class HomePage extends Component<Props> {
                         selectedTitleStyle={{color: 'red'}}
                         title="最热"
                         renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_polular.png')}/>}
-                        renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'red'}]}
+                        renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196F3'}]}
                                                          source={require('../../res/images/ic_polular.png')}/>}
                         badgeText="1"
                         onPress={() => this.setState({selectedTab: 'td_popular'})}>

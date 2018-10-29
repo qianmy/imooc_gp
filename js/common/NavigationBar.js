@@ -83,7 +83,7 @@ export default class NavigationBar extends Component {
 
 const styles = StyleSheet.create({//设置样式常量
     container: {
-        backgroundColor: 'gray'
+        backgroundColor: '#2196F3'
     },
     navBar: {
         flexDirection: 'row',

@@ -82,7 +82,7 @@ export default class SortKeyPage extends Component {
                 }
             ]
         )
-    }
+    };
 
     onSave(isChecked) {
         if (!isChecked && ArrayUtils.isEqual(this.originalCheckedArray, this.state.checkedArray)) {

@@ -28,11 +28,13 @@ export default class WelcomePage extends Component {
 
     render() {
         return (
-            <View>
+            <View style={{flex:1}}>
                 <NavigationBar
                     title={'欢迎'}
                 />
-                <Text>欢迎👏</Text>
+                <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                    <Text>欢迎👏</Text>
+                </View>
             </View>
         )
     }

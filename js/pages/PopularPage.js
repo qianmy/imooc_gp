@@ -25,7 +25,7 @@ export default class PopularPage extends Component {
         this.dataRepository = new DataRepository();
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.state = {
-            result: '',
+            //result: '',
             languages: []
         }
     }
@@ -46,24 +46,24 @@ export default class PopularPage extends Component {
             })
     }
 
-    onLoad() {
-        let url = this.genUrl(this.text);
-        this.dataRepository.fetchNetRepository(url)
-            .then(result => {
-                this.setState({
-                    result: JSON.stringify(result)
-                })
-            })
-            .catch(error => {
-                this.setState({
-                    result: JSON.stringify(result)
-                })
-            })
-    }
+    // onLoad() {
+    //     let url = this.genUrl(this.text);
+    //     this.dataRepository.fetchNetRepository(url)
+    //         .then(result => {
+    //             this.setState({
+    //                 result: JSON.stringify(result)
+    //             })
+    //         })
+    //         .catch(error => {
+    //             this.setState({
+    //                 result: JSON.stringify(result)
+    //             })
+    //         })
+    // }
 
-    genUrl(key) {
-        return URL + key + QUERY_STR;
-    }
+    // genUrl(key) {
+    //     return URL + key + QUERY_STR;
+    // }
 
     render() {
         let content = this.state.languages.length > 0 ?
@@ -148,7 +148,7 @@ class PopularTab extends Component {//导航下的页面
         )
     };
 
-    _keyExtractor = (item, index) => item.id;
+    _keyExtractor = (item, index) => item.id.toString();
 
     render() {
         return (

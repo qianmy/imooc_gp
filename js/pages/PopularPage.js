@@ -13,7 +13,8 @@ import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-v
 import NavigationBar from '../common/NavigationBar';
 import HomePage from './HomePage';
 import DataRepository from '../expand/dao/DataRepository';
-import RepositoryCeil from '../common/RepositoryCeil';
+import RepositoryCell from '../common/RepositoryCell';
+import LanguageDao, {FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=starts';
@@ -22,9 +23,27 @@ export default class PopularPage extends Component {
     constructor(props) {
         super(props);
         this.dataRepository = new DataRepository();
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.state = {
             result: '',
+            languages: []
         }
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    loadData() {
+        this.languageDao.fetch()
+            .then(result => {
+                this.setState({
+                    languages: result
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     onLoad() {
@@ -47,12 +66,25 @@ export default class PopularPage extends Component {
     }
 
     render() {
+        let content = this.state.languages.length > 0 ?
+            <ScrollableTabView
+                tabBarBackgroundColor='#2196F3'//tabBar背景色
+                tabBarInactiveTextColor="mintcream"//未选中状态文字颜色
+                tabBaractiveTextColor="#fff"//选中状态文字颜色
+                tabBarUnderLineStyle={{backgroundColor: '#e7e7e7', height: 2}}//下划线样式
+                renderTabBar={() => <ScrollableTabBar/>}
+            >
+                {this.state.languages.map((result, i, arr) => {
+                    let lan = arr[i];
+                    return lan.checked ? <PopularTab key={i} tabLabel={lan.name}>{lan.name}</PopularTab> : null;
+                })}
+            </ScrollableTabView> : null;
         return (
             <View style={styles.container}>
                 <NavigationBar
                     title={'最热'}
                     statusBar={{
-                        backgroundColor:'#2196F3'
+                        backgroundColor: '#2196F3'
                     }}
                 />
                 {/*<Text*/}
@@ -66,18 +98,7 @@ export default class PopularPage extends Component {
                 {/*onChangeText={text => this.text = text}*/}
                 {/*/>*/}
                 {/*<Text style={{height:500}}>{this.state.result}</Text>*/}
-                <ScrollableTabView
-                    tabBarBackgroundColor='#2196F3'//tabBar背景色
-                    tabBarInactiveTextColor="mintcream"//未选中状态文字颜色
-                    tabBaractiveTextColor="#fff"//选中状态文字颜色
-                    tabBarUnderLineStyle={{backgroundColor: '#e7e7e7', height: 2}}//下划线样式
-                    renderTabBar={() => <ScrollableTabBar/>}
-                >
-                    <PopularTab tabLabel="Java">Java</PopularTab>
-                    <PopularTab tabLabel="ios">ios</PopularTab>
-                    <PopularTab tabLabel="android">android</PopularTab>
-                    <PopularTab tabLabel="javaScript">javaScript</PopularTab>
-                </ScrollableTabView>
+                {content}
             </View>
         )
     }
@@ -104,14 +125,14 @@ class PopularTab extends Component {//导航下的页面
 
     onLoad() {
         this.setState({
-            isRefreshing:true
+            isRefreshing: true
         });
         let url = this.genUrl(this.props.tabLabel);
         this.dataRepository.fetchNetRepository(url)
             .then(result => {
                 this.setState({
                     dataSource: result.items,
-                    isRefreshing:false
+                    isRefreshing: false
                 })
             })
             .catch(error => {
@@ -123,7 +144,7 @@ class PopularTab extends Component {//导航下的页面
 
     _renderRow = ({item}) => {
         return (
-            <RepositoryCeil item={item}/>
+            <RepositoryCell item={item}/>
         )
     };
 
@@ -131,7 +152,7 @@ class PopularTab extends Component {//导航下的页面
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{flex: 1}}>
                 <FlatList
                     data={this.state.dataSource}
                     renderItem={this._renderRow}

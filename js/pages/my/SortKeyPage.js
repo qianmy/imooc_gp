@@ -114,7 +114,7 @@ export default class SortKeyPage extends Component {
         return (
             <View style={styles.container}>
                 <NavigationBar
-                    title={'我的'}
+                    title={'标签排序'}
                     leftButton={ViewUtils.getLeftButton(() => this.onBack())}
                     rightButton={rightButton}
                 />

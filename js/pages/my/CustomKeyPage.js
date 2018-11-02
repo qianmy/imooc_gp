@@ -24,6 +24,7 @@ export default class CustomKeyPage extends Component {
         super(props);
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.changeValues = [];//保存用户所做的修改
+        this.isRemoveKey = this.props.isRemoveKey ? true : false;
         this.state = {
             dataArray: [],
         }
@@ -47,10 +48,15 @@ export default class CustomKeyPage extends Component {
     }
 
     onSave() {
-        if(this.changeValues.length===0){
+        if (this.changeValues.length === 0) {
             this.props.navigator.pop();
             return;
         }
+
+        for (let i = 0, l = this.changeValues.length; i < l; i++) {
+            ArrayUtils.remove(this.state.dataArray, this.changeValues[i]);
+        }
+
         this.languageDao.save(this.state.dataArray);
         this.props.navigator.pop();
     }
@@ -88,32 +94,24 @@ export default class CustomKeyPage extends Component {
     }
 
     _onClick(item) {
-        item.checked = !item.checked;
+        if (!this.isRemoveKey) item.checked = !item.checked;
+
         this.setState({//为了重新渲染
             dataArray: this.state.dataArray,
-        })
-
-        // for (var i = 0, len = this.changeValues.length; i < len; i++) {
-        //     var temp = this.changeValues[i];//取出数组中的元素
-        //     if (temp === item) {//如果数组中包含用户所选的这个元素，那么从数组中删除这个元素
-        //         this.changeValues.splice(i, 1);
-        //         return;
-        //     }
-        // }
-        // //如果数组中不包含用户所选的这个元素，那么给数组添加这个元素
-        // this.changeValues.push(item);
+        });
 
         ArrayUtils.updateArray(this.changeValues,item);
     }
 
     renderCheckBox(item) {
         let leftText = item.name;
+        let isChecked = this.isRemoveKey ? false : item.checked;//移除页面不给默认值
         return (
             <CheckBox
                 style={{flex: 1, padding: 10}}
                 onClick={() => this._onClick(item)}
                 leftText={leftText}
-                isChecked={item.checked}//不写这个选中时，选中状态不显示
+                isChecked={isChecked}//不写这个选中时，选中状态不显示
                 checkedImage={<Image
                     style={{tintColor: '#6495ED'}}
                     source={require('./images/ic_check_box.png')}/>}
@@ -124,8 +122,8 @@ export default class CustomKeyPage extends Component {
         )
     }
 
-    onBack(){
-        if(this.changeValues.length===0){//用户没有做任何修改
+    onBack() {
+        if (this.changeValues.length === 0) {//用户没有做任何修改
             this.props.navigator.pop();
             return;
         }
@@ -133,29 +131,35 @@ export default class CustomKeyPage extends Component {
             '提示',
             '要保存修改吗？',
             [
-                {text:'不保存',onPress:()=>{
+                {
+                    text: '不保存', onPress: () => {
                     this.props.navigator.pop();
-                },style:'cancel'},
-                {text:'保存',onPress:()=>{
+                }, style: 'cancel'
+                },
+                {
+                    text: '保存', onPress: () => {
                     this.onSave();
-                }}
+                }
+                }
             ]
         )
 
     }
 
     render() {
+        let title = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let rightButtonTitle = this.isRemoveKey ? '移除' : '保存';
         let rightButton = <TouchableOpacity
             onPress={() => this.onSave()}
         >
             <View style={{margin: 10}}>
-                <Text style={styles.title}>保存</Text>
+                <Text style={styles.title}>{rightButtonTitle}</Text>
             </View>
         </TouchableOpacity>
         return (
             <View style={styles.container}>
                 <NavigationBar
-                    title={'自定义标签'}
+                    title={title}
                     style={{backgroundColor: '#6495ED'}}
                     leftButton={ViewUtils.getLeftButton(() => this.onBack())}
                     rightButton={rightButton}

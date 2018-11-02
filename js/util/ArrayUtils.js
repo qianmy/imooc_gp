@@ -15,8 +15,8 @@ import {
  * */
 export default class ArrayUtils {
     static updateArray(array, item) {
-        for (var i = 0, len = array.length; i < len; i++) {
-            var temp = array[i];
+        for (let i = 0, len = array.length; i < len; i++) {
+            let temp = array[i];
             if (temp === item) {
                 array.splice(i, 1);
                 return;
@@ -53,5 +53,17 @@ export default class ArrayUtils {
             if (arr1[i] !== arr2[i]) return false;
         }
         return true;
+    }
+
+    /*
+     * 将数组中指定元素移除
+     * @param arr
+     * @param item
+     * */
+    static remove(arr, item) {
+        if (!arr) return;
+        for (let i = 0, l = arr.length; i < l; i++) {
+            if (item === arr[i]) arr.splice(i, 1);
+        }
     }
 }

@@ -56,9 +56,9 @@ export default class HomePage extends Component<Props> {
                         selected={this.state.selectedTab === 'tb_favorite'}
                         selectedTitleStyle={{color: '#6495ED'}}
                         title="收藏"
-                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_polular.png')}/>}
+                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_favorite.png')}/>}
                         renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#6495ED'}]}
-                                                         source={require('../../res/images/ic_polular.png')}/>}
+                                                         source={require('../../res/images/ic_favorite.png')}/>}
                         badgeText="1"
                         onPress={() => this.setState({selectedTab: 'tb_favorite'})}>
                         <View style={styles.page1}></View>
@@ -68,9 +68,9 @@ export default class HomePage extends Component<Props> {
                         selectedTitleStyle={{color: '#6495ED'}}
                         title="我的"
                         renderIcon={() => <Image style={styles.image}
-                                                 source={require('../../res/images/ic_trending.png')}/>}
+                                                 source={require('../../res/images/ic_my.png')}/>}
                         renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#6495ED'}]}
-                                                         source={require('../../res/images/ic_trending.png')}/>}
+                                                         source={require('../../res/images/ic_my.png')}/>}
                         onPress={() => this.setState({selectedTab: 'tab_my'})}>
                         <MyPage {...this.props}/>
                     </TabNavigator.Item>

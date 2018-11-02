@@ -7,7 +7,8 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    FlatList
+    FlatList,
+    DeviceEventEmitter
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import NavigationBar from '../common/NavigationBar';
@@ -128,12 +129,29 @@ class PopularTab extends Component {//导航下的页面
             isRefreshing: true
         });
         let url = this.genUrl(this.props.tabLabel);
-        this.dataRepository.fetchNetRepository(url)
+        this.dataRepository
+            .fetchRepository(url)
             .then(result => {
+                let items = result && result.items ? result.items : result ? result : [];
                 this.setState({
-                    dataSource: result.items,
+                    dataSource: items,
                     isRefreshing: false
-                })
+                });
+                console.log('result.update_date',result.update_date)
+                if (result && result.update_date && !this.dataRepository.checkData(result.update_date)) {//数据过时
+                    DeviceEventEmitter.emit('showToast','数据过时');//发送通知
+                    //从网络上获取新的数据
+                    return this.dataRepository.fetchNetRepository(url);
+                }else {
+                    DeviceEventEmitter.emit('showToast','显示缓存数据');//发送通知
+                }
+            })
+            .then(items => {
+                if (!items || items.length === 0) return;
+                this.setState({
+                    dataSource: items,
+                });
+                DeviceEventEmitter.emit('showToast','显示网络数据');//发送通知
             })
             .catch(error => {
                 this.setState({

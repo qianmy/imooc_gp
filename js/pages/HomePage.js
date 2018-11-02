@@ -10,12 +10,13 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, Image, View} from 'react-native';
+import {Platform, StyleSheet, Text, Image, View, DeviceEventEmitter} from 'react-native';
 import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
 import PopularPage from './PopularPage';
 import AsyncStorageTest from '../../AsyncStorageTest';
 import MyPage from './my/MyPage';
+import Toast,{DURATION} from "react-native-easy-toast";
 
 type Props = {};
 export default class HomePage extends Component<Props> {
@@ -26,6 +27,19 @@ export default class HomePage extends Component<Props> {
         }
     }
 
+    componentDidMount() {
+        //组件完成加载的时候，注册一个通知
+        //其它页面发出这个通知的时候，接受一个text
+        this.listener = DeviceEventEmitter.addListener('showToast', (text) => {
+            this.toast.show(text,DURATION.LENGTH_SHORT);
+        })
+    }
+
+    componentWillUnmount(){
+        //移除监听
+        this.listener&&this.listener.remove();
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -34,7 +48,8 @@ export default class HomePage extends Component<Props> {
                         selected={this.state.selectedTab === 'td_popular'}
                         selectedTitleStyle={{color: '#6495ED'}}
                         title="最热"
-                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_polular.png')}/>}
+                        renderIcon={() => <Image style={styles.image}
+                                                 source={require('../../res/images/ic_polular.png')}/>}
                         renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#6495ED'}]}
                                                          source={require('../../res/images/ic_polular.png')}/>}
                         badgeText="1"
@@ -56,7 +71,8 @@ export default class HomePage extends Component<Props> {
                         selected={this.state.selectedTab === 'tb_favorite'}
                         selectedTitleStyle={{color: '#6495ED'}}
                         title="收藏"
-                        renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_favorite.png')}/>}
+                        renderIcon={() => <Image style={styles.image}
+                                                 source={require('../../res/images/ic_favorite.png')}/>}
                         renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#6495ED'}]}
                                                          source={require('../../res/images/ic_favorite.png')}/>}
                         badgeText="1"
@@ -75,6 +91,7 @@ export default class HomePage extends Component<Props> {
                         <MyPage {...this.props}/>
                     </TabNavigator.Item>
                 </TabNavigator>
+                <Toast ref={toast => this.toast = toast}/>
             </View>
         );
     }

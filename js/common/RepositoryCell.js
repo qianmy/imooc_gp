@@ -12,12 +12,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-export default class RepositoryCeil extends Component {
+export default class RepositoryCell extends Component {
     render() {
         const {item} = this.props;
         return (
             <TouchableOpacity
                 style={styles.container}
+                onPress={this.props.onSelect}
             >
                 <View style={styles.cell_container}>
                     <Text style={styles.title}>{item.full_name}</Text>

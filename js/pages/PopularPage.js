@@ -16,6 +16,7 @@ import HomePage from './HomePage';
 import DataRepository from '../expand/dao/DataRepository';
 import RepositoryCell from '../common/RepositoryCell';
 import LanguageDao, {FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
+import RepositoryDetail from './RepositoryDetail';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=starts';
@@ -77,7 +78,7 @@ export default class PopularPage extends Component {
             >
                 {this.state.languages.map((result, i, arr) => {
                     let lan = arr[i];
-                    return lan.checked ? <PopularTab key={i} tabLabel={lan.name}>{lan.name}</PopularTab> : null;
+                    return lan.checked ? <PopularTab key={i} tabLabel={lan.name} {...this.props}/> : null;
                 })}
             </ScrollableTabView> : null;
         return (
@@ -137,13 +138,13 @@ class PopularTab extends Component {//导航下的页面
                     dataSource: items,
                     isRefreshing: false
                 });
-                console.log('result.update_date',result.update_date)
+                console.log('result.update_date', result.update_date)
                 if (result && result.update_date && !this.dataRepository.checkData(result.update_date)) {//数据过时
-                    DeviceEventEmitter.emit('showToast','数据过时');//发送通知
+                    DeviceEventEmitter.emit('showToast', '数据过时');//发送通知
                     //从网络上获取新的数据
                     return this.dataRepository.fetchNetRepository(url);
-                }else {
-                    DeviceEventEmitter.emit('showToast','显示缓存数据');//发送通知
+                } else {
+                    DeviceEventEmitter.emit('showToast', '显示缓存数据');//发送通知
                 }
             })
             .then(items => {
@@ -151,7 +152,7 @@ class PopularTab extends Component {//导航下的页面
                 this.setState({
                     dataSource: items,
                 });
-                DeviceEventEmitter.emit('showToast','显示网络数据');//发送通知
+                DeviceEventEmitter.emit('showToast', '显示网络数据');//发送通知
             })
             .catch(error => {
                 this.setState({
@@ -160,9 +161,21 @@ class PopularTab extends Component {//导航下的页面
             })
     }
 
+    onSelect(item) {
+        this.props.navigator.push({
+            component:RepositoryDetail,
+            params:{
+                item:item,
+                ...this.props
+            }
+        })
+    }
+
     _renderRow = ({item}) => {
         return (
-            <RepositoryCell item={item}/>
+            <RepositoryCell
+                onSelect={() => this.onSelect(item)}
+                item={item}/>
         )
     };
 

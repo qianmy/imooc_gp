@@ -14,18 +14,17 @@ import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-v
 import NavigationBar from '../common/NavigationBar';
 import HomePage from './HomePage';
 import DataRepository,{FLAG_STORAGE} from '../expand/dao/DataRepository';
-import RepositoryCell from '../common/RepositoryCell';
+import TrendingCell from '../common/TrendingCell';
 import LanguageDao, {FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
 import RepositoryDetail from './RepositoryDetail';
 
-const URL = 'https://api.github.com/search/repositories?q=';
-const QUERY_STR = '&sort=starts';
+const API_URL = 'http://github.com/trending/';
 
-export default class PopularPage extends Component {
+export default class TrendingPage2 extends Component {
     constructor(props) {
         super(props);
         this.dataRepository = new DataRepository();
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
         this.state = {
             //result: '',
             languages: []
@@ -48,25 +47,6 @@ export default class PopularPage extends Component {
             })
     }
 
-    // onLoad() {
-    //     let url = this.genUrl(this.text);
-    //     this.dataRepository.fetchNetRepository(url)
-    //         .then(result => {
-    //             this.setState({
-    //                 result: JSON.stringify(result)
-    //             })
-    //         })
-    //         .catch(error => {
-    //             this.setState({
-    //                 result: JSON.stringify(result)
-    //             })
-    //         })
-    // }
-
-    // genUrl(key) {
-    //     return URL + key + QUERY_STR;
-    // }
-
     render() {
         let content = this.state.languages.length > 0 ?
             <ScrollableTabView
@@ -78,38 +58,27 @@ export default class PopularPage extends Component {
             >
                 {this.state.languages.map((result, i, arr) => {
                     let lan = arr[i];
-                    return lan.checked ? <PopularTab key={i} tabLabel={lan.name} {...this.props}/> : null;
+                    return lan.checked ? <TrendingPageTab key={i} tabLabel={lan.name} {...this.props}/> : null;
                 })}
             </ScrollableTabView> : null;
         return (
             <View style={styles.container}>
                 <NavigationBar
-                    title={'最热'}
+                    title={'趋势'}
                     statusBar={{
                         backgroundColor: '#2196F3'
                     }}
                 />
-                {/*<Text*/}
-                {/*style={styles.tips}*/}
-                {/*onPress={() => {*/}
-                {/*this.onLoad()*/}
-                {/*}}*/}
-                {/*>获取数据</Text>*/}
-                {/*<TextInput*/}
-                {/*style={{height: 33,width:300,borderWidth:1}}*/}
-                {/*onChangeText={text => this.text = text}*/}
-                {/*/>*/}
-                {/*<Text style={{height:500}}>{this.state.result}</Text>*/}
                 {content}
             </View>
         )
     }
 }
 
-class PopularTab extends Component {//导航下的页面
+class TrendingPageTab extends Component {//导航下的页面
     constructor(props) {
         super(props);
-        this.dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
+        this.dataRepository = new DataRepository(FLAG_STORAGE.flag_trending);
         this.state = {
             result: '',
             dataSource: [],
@@ -121,15 +90,15 @@ class PopularTab extends Component {//导航下的页面
         this.onLoad();
     }
 
-    genUrl(key) {
-        return URL + key + QUERY_STR;
+    genUrl(timeSpan,category) {//timeSpan-时间戳 category-类别
+        return API_URL + category + timeSpan.searchText;
     }
 
     onLoad() {
         this.setState({
             isRefreshing: true
         });
-        let url = this.genUrl(this.props.tabLabel);
+        let url = this.genUrl('?since=daily',this.props.tabLabel);
         this.dataRepository
             .fetchRepository(url)
             .then(result => {
@@ -172,13 +141,13 @@ class PopularTab extends Component {//导航下的页面
 
     _renderRow = ({item}) => {
         return (
-            <RepositoryCell
+            <TrendingCell
                 onSelect={() => this.onSelect(item)}
                 item={item}/>
         )
     };
 
-    _keyExtractor = (item, index) => item.id.toString();
+    _keyExtractor = (item, index) => index.toString();
 
     render() {
         return (

@@ -22,7 +22,6 @@ import ArrayUtils from '../../util/ArrayUtils';
 export default class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.changeValues = [];//保存用户所做的修改
         this.isRemoveKey = this.props.isRemoveKey ? true : false;
         this.state = {
@@ -31,6 +30,7 @@ export default class CustomKeyPage extends Component {
     }
 
     componentDidMount() {
+        this.props.flag ? this.languageDao = new LanguageDao(this.props.flag) : this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.loadData();
     }
 
@@ -53,8 +53,10 @@ export default class CustomKeyPage extends Component {
             return;
         }
 
-        for (let i = 0, l = this.changeValues.length; i < l; i++) {
-            ArrayUtils.remove(this.state.dataArray, this.changeValues[i]);
+        if(this.isRemoveKey){
+            for (let i = 0, l = this.changeValues.length; i < l; i++) {
+                ArrayUtils.remove(this.state.dataArray, this.changeValues[i]);
+            };
         }
 
         this.languageDao.save(this.state.dataArray);
@@ -99,8 +101,7 @@ export default class CustomKeyPage extends Component {
         this.setState({//为了重新渲染
             dataArray: this.state.dataArray,
         });
-
-        ArrayUtils.updateArray(this.changeValues,item);
+        ArrayUtils.updateArray(this.changeValues, item);
     }
 
     renderCheckBox(item) {
@@ -148,6 +149,7 @@ export default class CustomKeyPage extends Component {
 
     render() {
         let title = this.isRemoveKey ? '标签移除' : '自定义标签';
+        title = this.props.flag === FLAG_LANGUAGE.flag_language ? '自定义语言' : title;
         let rightButtonTitle = this.isRemoveKey ? '移除' : '保存';
         let rightButton = <TouchableOpacity
             onPress={() => this.onSave()}
